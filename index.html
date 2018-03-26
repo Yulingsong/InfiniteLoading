@@ -1,41 +1,13 @@
-# InfiniteLoading
-simple demo about Infinite Loading Data.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1, maximum-scale=1"/>
+    <title>testCookie</title>
+    <script src="./src/jquery-3.2.1.min.js"></script>
 
-
-
-​	已经有好久没有更新文章了，最近做的东西也不算多，只是没有时间更新文章，今天继续弄个给小白看的文章，一般的移动端搜索结果页或者那种分页加载的页面需要用的，上拉无限加载数据，不知道这个题目对不对，大家看了就知道是不是自己需要的东西了。
-
-![Mar-26-2018 14-35-30.gif](https://upload-images.jianshu.io/upload_images/1062695-abc8893f93f1e5b4.gif?imageMogr2/auto-orient/strip)
-
-​	下面直接说完成过程吧，这个可以说是非常简单的一个小功能了，对于小白来说也能一眼就能看明白的，当然，要是有更好的方法，希望大家也跟我说下。
-
-##### 第一步：构建页面框架
-​	这一步很简单，一般自己的项目都会有自己的设计，我就直接写一个简单粗糙的列表页。html部分是：
-
-    <div class="nav">
-      上拉分页无限加载
-    </div>
-    <!--显示的大概样子-->
-    <div class="container">
-        <div class="lineItem">1</div>
-        <div class="lineItem">2</div>
-        <div class="lineItem">3</div>
-        <div class="lineItem">4</div>
-        <div class="lineItem">5</div>
-        <div class="lineItem">6</div>
-        <div class="lineItem">7</div>
-        <div class="lineItem">8</div>
-        <div class="lineItem">9</div>
-        <div class="lineItem">10</div>
-        <div class="lineItem">11</div>
-        <div class="lineItem">12</div>
-        <div class="lineItem">13</div>
-        <div class="spinner">加载中。。。</div>
-        <div class="spinner">- 数据已经加载到底 -</div>
-    </div>
-
-css部分是这样的：
-
+    <title>loading</title>
     <style>
         *{
             margin: 0;
@@ -71,30 +43,48 @@ css部分是这样的：
             background-color: lightcyan;
             margin-top: 10px;
         }
-    
+
     </style>
+</head>
+<body>
+<div class="nav">
+    上拉分页无限加载
+</div>
+<!--显示的大概样子-->
+<!--<div class="container">-->
+    <!--<div class="lineItem">1</div>-->
+    <!--<div class="lineItem">2</div>-->
+    <!--<div class="lineItem">3</div>-->
+    <!--<div class="lineItem">4</div>-->
+    <!--<div class="lineItem">5</div>-->
+    <!--<div class="lineItem">6</div>-->
+    <!--<div class="lineItem">7</div>-->
+    <!--<div class="lineItem">8</div>-->
+    <!--<div class="lineItem">9</div>-->
+    <!--<div class="lineItem">10</div>-->
+    <!--<div class="lineItem">11</div>-->
+    <!--<div class="lineItem">12</div>-->
+    <!--<div class="lineItem">13</div>-->
+    <!--<div class="spinner">加载中。。。</div>-->
+    <!--<div class="spinner">- 数据已经加载到底 -</div>-->
+<!--</div>-->
 
-写完显示出来的样子是下图：
-
-![1](https://upload-images.jianshu.io/upload_images/1062695-0a043ede02713bd5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-![2](https://upload-images.jianshu.io/upload_images/1062695-8a7c07ef3cb75112.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
-##### 第二步：编写逻辑部分
-
-​	我这边引入了jquery，大家用js写的话，部分地方有点差异，不过都没啥区别。大家注意下，这块我用的ajax请求的url是公司的，所以就拿掉了，大家替换上各自项目的url和请求数据就行。
+<div class="container">
+    <!--显示数据不符-->
+</div>
+<script>
 
     //声明部分变量
     var pageNum = 1;//页码
     var pageSize = 10;//每页多少条数据
     var infinite = true;//防止不停调接口加载新数据,false的时候就不能请求接口
     var count = 0;//总数,判断是否已经加载到底了
-    var dataCache = [];//数据缓存，根据接口不同情况，可以考虑不用这个。
+    var dataCache = [];//数据缓存
+
     //请求方法
     function sendRequest(num){
         var sendData = {
-            //其它请求参数
+            //其他请求参数
             pageNum:num,
             pageSize:pageSize
         };
@@ -103,7 +93,7 @@ css部分是这样的：
             infinite = false;
             $.ajax({
                 type: "POST",
-                url: url,
+                url: " 你自己的url ",
                 data:sendData,
                 dataType: 'json',
                 success: function (data) {
@@ -117,9 +107,9 @@ css部分是这样的：
                             // 比如暂无数据列表之类的文案,背景之类的。
                             //并且会有种可能就是在加载到部分页数之后,请求回来的数据为空,页面显示也是有相应的变化
                             if(pageNum == 1){
-    
+
                             }else{
-    
+
                             }
                         }
                         //在页面渲染之后,此时的数字加1,为了下一次的加载
@@ -141,7 +131,7 @@ css部分是这样的：
         }
     }
     sendRequest(pageNum);
-    
+
     //渲染页面方法
     function setPage(data){
         console.log(data);
@@ -159,25 +149,19 @@ css部分是这样的：
         var loadHtml = '';
         if(count > dataCache.length){
             loadHtml = '<div class="spinner">加载中。。。</div>';
-    
+
         }else{
             loadHtml = '<div class="spinner">- 数据已经加载到底 -</div>';
         }
         $(".container").append(loadHtml);
     }
-    
+
     //拼接html方法,这边的html因为太简单,所以这块看起来有点多余,在部分拼接html复杂的情况下,这样写可以看着好看点,修改添加的时候也方便点
     function setHtmlModel(data){
         var html = '';
         html += '<div class="lineItem">'+data.name+'</div>';
         return html;
     }
-
-
-​	这部分的东西基本上就是请求数据，渲染页面，添加加载框或者加载到底的显示，不过最重要的部分无限加载这块还没有添加上去，所以此时你翻来覆去只能请求一次。
-
-
-##### 第三步：添加自动加载的方法
 
     //自动加载新数据,当滚轮滚到离页面下面一段距离的时候,就自动更新数据,请求接口
     $(function(){
@@ -197,10 +181,21 @@ css部分是这样的：
     });
 
 
-​	走完这三步就完成了一个简单的自动加载的列表页了。
-说实话，写前端也有段时间了，按道理来说应该写一点复杂点的东西，像这样简单的东西随随便便都能找到，可能也是我学艺不精，还在慢慢学习中，希望以后能给大家带来更好的文章。有什么问题大家也可以跟我一起交流交流。
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
